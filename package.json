@@ -1,0 +1,33 @@
+{
+  "name": "milk-shake",
+  "version": "1.0.0",
+  "description": "a params serialization and deserialization tool",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Konata9/milk-shake.git"
+  },
+  "keywords": [
+    "params",
+    "serialization",
+    "params",
+    "deserialization"
+  ],
+  "author": "Konata9",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Konata9/milk-shake/issues"
+  },
+  "homepage": "https://github.com/Konata9/milk-shake#readme",
+  "dependencies": {
+    "@konata9/typecheck.js": "^1.1.0"
+  },
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "mocha": "^6.1.4"
+  }
+}
