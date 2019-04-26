@@ -1,3 +1,2 @@
-export function add(a: number, b: number): number {
-  return a + b;
-}
+import milkShake from "./milkShake";
+export default milkShake;

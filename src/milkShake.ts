@@ -19,3 +19,5 @@ function camelToSnake(camel: string): string {
   );
   return snake;
 }
+
+export default {snakeToCamel, camelToSnake};
