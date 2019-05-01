@@ -1,6 +1,6 @@
 import typeCheck from "@konata9/typecheck.js";
 
-function snakeToCamel(snake: string): string {
+function formatSnakeToCamel(snake: string): string {
   if (!snake) {
     throw new Error("input can not be null value");
   }
@@ -19,7 +19,7 @@ function snakeToCamel(snake: string): string {
     .join("");
 }
 
-function camelToSnake(camel: string): string {
+function formatCamelToSnake(camel: string): string {
   if (!camel) {
     throw new Error("input can not be null value");
   }
@@ -28,14 +28,15 @@ function camelToSnake(camel: string): string {
     throw new Error("input must be string type");
   }
 
-  const matches: Array<string> = camel.match(/[A-Z]/g) || [];
-  let snake: string = "";
+  const camelStr = camel[0].toLowerCase() + camel.slice(1);
+  const matches: Array<string> = camelStr.match(/[A-Z]/g) || [];
+  let snake: string = camelStr;
   matches.forEach(
     (word: string): void => {
-      snake = camel.replace(word, `_${word.toLocaleLowerCase()}`);
+      snake = snake.replace(word, `_${word.toLowerCase()}`);
     }
   );
   return snake;
 }
 
-export { snakeToCamel, camelToSnake };
+export { formatSnakeToCamel, formatCamelToSnake };

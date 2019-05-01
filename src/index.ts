@@ -1,5 +1,7 @@
-import * as milkShake from "./utils";
-const {snakeToCamel, camelToSnake} = milkShake;
+import { formatSnakeToCamel, formatCamelToSnake } from "./utils";
 
-export {snakeToCamel, camelToSnake};
-export default milkShake;
+function formatParamsKey(params: object): object {
+  return {};
+}
+
+export { formatSnakeToCamel, formatCamelToSnake };
