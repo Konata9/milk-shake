@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "build": "tsc",
-    "test": "npx mocha -r ./node_modules/ts-node/register test/index.test.ts"
+    "test": "npx jest"
   },
   "repository": {
     "type": "git",
@@ -24,13 +24,12 @@
   },
   "homepage": "https://github.com/Konata9/milk-shake#readme",
   "dependencies": {
-    "@konata9/typecheck.js": "^1.1.0"
+    "@konata9/typecheck.js": "^2.0.6"
   },
   "devDependencies": {
-    "@types/chai": "^4.1.7",
-    "@types/mocha": "^5.2.6",
-    "chai": "^4.2.0",
-    "mocha": "^6.1.4",
+    "@types/jest": "^24.0.12",
+    "jest": "^24.7.1",
+    "ts-jest": "^24.0.2",
     "ts-node": "^8.1.0",
     "typescript": "^3.4.5"
   }
