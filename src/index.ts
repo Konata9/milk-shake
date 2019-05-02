@@ -60,7 +60,10 @@ function formatMapping(
   }
 }
 
-function formatParams(params: object, options: FormatOptions): object {
+function formatParams(
+  params: { [key: string]: any },
+  options: FormatOptions
+): object {
   if (!params) {
     throw new Error("input can not be null value");
   }
@@ -73,7 +76,7 @@ function formatParams(params: object, options: FormatOptions): object {
     return {};
   }
 
-  const copyParams: { [key: string]: any } = { ...params };
+  const copyParams = { ...params };
   const paramKeys = Object.keys(copyParams);
   const formattedParams: { [key: string]: any } = {};
 
