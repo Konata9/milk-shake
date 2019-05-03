@@ -31,19 +31,27 @@ function setFormatMethod(method: string | RuleFunction): RuleFunction {
 function checkMapping(
   key: string,
   mapping: Array<MappingOptions>
-): { result: boolean; mapItem: MappingOptions | undefined } {
+): {
+  result: boolean;
+  mapItem: MappingOptions | undefined;
+  mappingIndex: number;
+} {
+  let mappingIndex = 0;
   const mapItem = mapping.find(item => {
     const { from } = item;
     if (typeCheck(from) === "string") {
       return key === from;
     } else {
-      return from.includes(key);
+      // from 数组中的 index 为了避免重复处理
+      mappingIndex = from.indexOf(key);
+      return mappingIndex > -1;
     }
   });
 
   return {
     result: !!mapItem,
-    mapItem
+    mapItem,
+    mappingIndex
   };
 }
 
@@ -51,12 +59,13 @@ function formatMapping(
   params: { [key: string]: any },
   mapItem: MappingOptions
 ): any {
+  const copyParams = { ...params };
   const { from, rules = null } = mapItem;
   if (!rules) {
     const fromKey = typeCheck(from) === "string" ? <string>from : from[0];
-    return params[fromKey];
+    return copyParams[fromKey];
   } else {
-    return rules(params, from);
+    return rules(copyParams, from);
   }
 }
 
@@ -92,12 +101,16 @@ function formatParams(
     if (exclude.includes(key)) {
       formattedParams[key] = copyParams[key];
     } else {
-      const { result, mapItem } = checkMapping(key, mapping);
+      const { result, mapItem, mappingIndex } = checkMapping(key, mapping);
       if (result) {
         const { to } = <MappingOptions>mapItem;
-        formattedParams[to] = formatMapping(copyParams, <MappingOptions>(
-          mapItem
-        ));
+        // 当 mapping 的 from 为数组时，处理在第一个匹配的时候就已经完成了。
+        //当 key 为 from 数组的第二个及之后元素时，跳过处理
+        if (mappingIndex < 1) {
+          formattedParams[to] = formatMapping(copyParams, <MappingOptions>(
+            mapItem
+          ));
+        }
       } else {
         if (typeCheck(copyParams[key]) === "array") {
           formattedParams[formatMethod(key)] = copyParams[key].map(
