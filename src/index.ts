@@ -10,7 +10,7 @@ interface FormatOptions {
 interface MappingOptions {
   from: string | Array<string>;
   to: string;
-  rules?: (from: string | Array<string>, to: string) => any;
+  rules?: (data: any, from?: string | Array<string>) => any;
 }
 
 interface RuleFunction {
@@ -51,12 +51,12 @@ function formatMapping(
   params: { [key: string]: any },
   mapItem: MappingOptions
 ): any {
-  const { from, to, rules = null } = mapItem;
+  const { from, rules = null } = mapItem;
   if (!rules) {
     const fromKey = typeCheck(from) === "string" ? <string>from : from[0];
     return params[fromKey];
   } else {
-    return rules(from, to);
+    return rules(params, from);
   }
 }
 
@@ -73,7 +73,7 @@ function formatParams(
   }
 
   if (Object.keys(params).length === 0) {
-    return {};
+    return params;
   }
 
   const copyParams = { ...params };
@@ -99,10 +99,19 @@ function formatParams(
           mapItem
         ));
       } else {
-        formattedParams[formatMethod(key)] =
-          typeCheck(copyParams[key]) === "object"
-            ? formatParams(copyParams[key], options)
-            : copyParams[key];
+        if (typeCheck(copyParams[key]) === "array") {
+          formattedParams[formatMethod(key)] = copyParams[key].map(
+            (innerParam: { [key: string]: any }) =>
+              formatParams(innerParam, options)
+          );
+        } else if (typeCheck(copyParams[key]) === "object") {
+          formattedParams[formatMethod(key)] = formatParams(
+            copyParams[key],
+            options
+          );
+        } else {
+          formattedParams[formatMethod(key)] = copyParams[key];
+        }
       }
     }
   });
