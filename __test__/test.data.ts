@@ -99,6 +99,41 @@ const formattedUserInfoAll = {
   friendList: [{ fName: "friend 1", fAge: 18 }, { fName: "friend 2", fAge: 18 }]
 };
 
+const fullTestData = {
+  user_name: "konata",
+  info: { user_country: "china", user_city: "sh" },
+  user_address: { code: "12345", address: "aaabbbccc" },
+  friend_list: [
+    {
+      first_name: "a",
+      last_name: "b"
+    },
+    {
+      first_name: "c",
+      last_name: "d"
+    }
+  ],
+  Type: 2,
+  extra: {
+    job: "engineer"
+  }
+};
+
+const formattedFullData = {
+  userName: "konata",
+  info: {
+    userCountry: "china",
+    userCity: "sh"
+  },
+  address: "12345-aaabbbccc",
+  friendList: [
+    { firstName: "a", lastName: "b" },
+    { firstName: "c", lastName: "d" }
+  ],
+  Type: 2,
+  job: "engineer"
+};
+
 export {
   userInfo,
   formattedUserInfo,
@@ -113,5 +148,7 @@ export {
   userInfoMapping3,
   userInfoFullMapping1,
   userDumblicateInfo,
-  formattedUserInfoAll
+  formattedUserInfoAll,
+  fullTestData,
+  formattedFullData
 };

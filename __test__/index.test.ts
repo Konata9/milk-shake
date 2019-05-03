@@ -13,7 +13,9 @@ import {
   userInfoMapping3,
   userInfoFullMapping1,
   userDumblicateInfo,
-  formattedUserInfoAll
+  formattedUserInfoAll,
+  fullTestData,
+  formattedFullData
 } from "./test.data";
 
 test("formatParams snake => camel check", () =>
@@ -136,3 +138,48 @@ test("formatParams all test", () =>
       mapping: [{ from: "user_gender", to: "_user_gender_" }]
     })
   ).toEqual(formattedUserInfoAll));
+
+test("formatParams full test", () =>
+  expect(
+    formatParams(fullTestData, {
+      method: "toCamel",
+      exclude: ["Type"],
+      mapping: [
+        { from: "extra", to: "job", rules: data => data["extra"]["job"] },
+        {
+          from: "user_address",
+          to: "address",
+          rules: data =>
+            `${data["user_address"]["code"]}-${data["user_address"]["address"]}`
+        }
+      ]
+    })
+  ).toEqual(formattedFullData));
+
+test("formatParams full test", () =>
+  expect(
+    formatParams(formattedFullData, {
+      method: "toSnake",
+      exclude: ["Type"],
+      mapping: [
+        {
+          from: "job",
+          to: "extra",
+          rules: data => ({
+            job: data["job"]
+          })
+        },
+        {
+          from: "address",
+          to: "user_address",
+          rules: data => {
+            const addressInfo = data.address.split("-");
+            return {
+              code: addressInfo[0],
+              address: addressInfo[1]
+            };
+          }
+        }
+      ]
+    })
+  ).toEqual(fullTestData));
