@@ -69,7 +69,7 @@ function formatMapping(
   }
 }
 
-function formatParams(
+function shakeParams(
   params: { [key: string]: any },
   options: FormatOptions
 ): object {
@@ -115,10 +115,10 @@ function formatParams(
         if (typeCheck(copyParams[key]) === "array") {
           formattedParams[formatMethod(key)] = copyParams[key].map(
             (innerParam: { [key: string]: any }) =>
-              formatParams(innerParam, options)
+              shakeParams(innerParam, options)
           );
         } else if (typeCheck(copyParams[key]) === "object") {
-          formattedParams[formatMethod(key)] = formatParams(
+          formattedParams[formatMethod(key)] = shakeParams(
             copyParams[key],
             options
           );
@@ -132,5 +132,5 @@ function formatParams(
   return formattedParams;
 }
 
-export { formatSnakeToCamel, formatCamelToSnake, formatParams };
-export default formatParams;
+export { formatSnakeToCamel, formatCamelToSnake, shakeParams };
+export default shakeParams;

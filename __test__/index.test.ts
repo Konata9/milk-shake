@@ -1,4 +1,4 @@
-import formatParams from "./../src";
+import shakeParams from "./../src";
 import {
   userInfo,
   formattedUserInfo,
@@ -18,24 +18,24 @@ import {
   formattedFullData
 } from "./test.data";
 
-test("formatParams snake => camel check", () =>
-  expect(formatParams(userInfo, { method: "toCamel" })).toEqual(
+test("shakeParams snake => camel check", () =>
+  expect(shakeParams(userInfo, { method: "toCamel" })).toEqual(
     formattedUserInfo
   ));
 
-test("formatParams camel => snake check", () =>
-  expect(formatParams(formattedUserInfo, { method: "toSnake" })).toEqual(
+test("shakeParams camel => snake check", () =>
+  expect(shakeParams(formattedUserInfo, { method: "toSnake" })).toEqual(
     userInfo
   ));
 
-test("formatParams customFormatRules test", () =>
-  expect(formatParams(userInfo, { method: key => `_${key}_` })).toEqual(
+test("shakeParams customFormatRules test", () =>
+  expect(shakeParams(userInfo, { method: key => `_${key}_` })).toEqual(
     customUserInfo
   ));
 
-test("formatParams customFormatRules test", () =>
+test("shakeParams customFormatRules test", () =>
   expect(
-    formatParams(userInfo, {
+    shakeParams(userInfo, {
       method: key =>
         key
           .split("")
@@ -44,37 +44,37 @@ test("formatParams customFormatRules test", () =>
     })
   ).toEqual(customUserInfo2));
 
-test("formatParams exclude single test", () =>
+test("shakeParams exclude single test", () =>
   expect(
-    formatParams(userInfo, { method: "toCamel", exclude: ["middle_name"] })
+    shakeParams(userInfo, { method: "toCamel", exclude: ["middle_name"] })
   ).toEqual(excludeInfo));
 
-test("formatParams exclude list test", () =>
+test("shakeParams exclude list test", () =>
   expect(
-    formatParams(userInfo, {
+    shakeParams(userInfo, {
       method: "toCamel",
       exclude: ["middle_name", "last_name"]
     })
   ).toEqual(excludeInfo2));
 
-test("formatParams deep test", () =>
+test("shakeParams deep test", () =>
   expect(
-    formatParams(userInfoFull, {
+    shakeParams(userInfoFull, {
       method: "toCamel"
     })
   ).toEqual(formattedUserInfoFull));
 
-test("formatParams mapping test", () =>
+test("shakeParams mapping test", () =>
   expect(
-    formatParams(userInfo, {
+    shakeParams(userInfo, {
       method: "toCamel",
       mapping: [{ from: "first_name", to: "myFirstName" }]
     })
   ).toEqual(userInfoMapping1));
 
-test("formatParams mapping rules test", () =>
+test("shakeParams mapping rules test", () =>
   expect(
-    formatParams(userInfo, {
+    shakeParams(userInfo, {
       method: "toCamel",
       mapping: [
         {
@@ -86,9 +86,9 @@ test("formatParams mapping rules test", () =>
     })
   ).toEqual(userInfoMapping2));
 
-test("formatParams mapping rules combine test", () =>
+test("shakeParams mapping rules combine test", () =>
   expect(
-    formatParams(userInfo, {
+    shakeParams(userInfo, {
       method: "toCamel",
       mapping: [
         {
@@ -100,9 +100,9 @@ test("formatParams mapping rules combine test", () =>
     })
   ).toEqual(userInfoMapping3));
 
-test("formatParams multi mapping test", () =>
+test("shakeParams multi mapping test", () =>
   expect(
-    formatParams(userInfoFull, {
+    shakeParams(userInfoFull, {
       method: "toCamel",
       mapping: [
         {
@@ -119,9 +119,9 @@ test("formatParams multi mapping test", () =>
     })
   ).toEqual(userInfoFullMapping1));
 
-test("formatParams dumplicate name test", () =>
+test("shakeParams dumplicate name test", () =>
   expect(
-    formatParams(userInfo, {
+    shakeParams(userInfo, {
       method: "toCamel",
       mapping: [
         { from: "first_name", to: "first_name" },
@@ -130,18 +130,18 @@ test("formatParams dumplicate name test", () =>
     })
   ).toEqual(userDumblicateInfo));
 
-test("formatParams all test", () =>
+test("shakeParams all test", () =>
   expect(
-    formatParams(userInfoFull, {
+    shakeParams(userInfoFull, {
       method: "toCamel",
       exclude: ["user_name"],
       mapping: [{ from: "user_gender", to: "_user_gender_" }]
     })
   ).toEqual(formattedUserInfoAll));
 
-test("formatParams full test", () =>
+test("shakeParams full test", () =>
   expect(
-    formatParams(fullTestData, {
+    shakeParams(fullTestData, {
       method: "toCamel",
       exclude: ["Type"],
       mapping: [
@@ -156,9 +156,9 @@ test("formatParams full test", () =>
     })
   ).toEqual(formattedFullData));
 
-test("formatParams full test", () =>
+test("shakeParams full test", () =>
   expect(
-    formatParams(formattedFullData, {
+    shakeParams(formattedFullData, {
       method: "toSnake",
       exclude: ["Type"],
       mapping: [
