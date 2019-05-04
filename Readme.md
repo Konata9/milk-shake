@@ -165,11 +165,66 @@ const formattedUserInfo = shakeParams(userInfo, {
 - 3. 使用 `melting` 删除指定的 `key`
 
 ```javascript
+const userInfo = {
+  user_name: "konata",
+  age: 16,
+  friend_list: [
+    { friend_name: "hiragi kagami" },
+    { friend_name: "hiragi tsukasa" }
+  ]
+};
+
+const formattedUserInfo = shakeParams(userInfo, {
+  method: "toCamel",
+  melting: {
+    target: ["age"]
+  }
+});
+
+/** formattedUserInfo
+ * { userName: 'konata',
+ *  friendList: [
+ *   { friendName: 'hiragi kagami' },
+ *   { friendName: 'hiragi tsukasa' }
+ *  ]
+ * }
+ */
 ```
 
 - 4. 使用 `melting` 对嵌套结构进行扁平化
 
 ```javascript
+const userInfo = {
+  info: {
+    user_name: "konata",
+    age: 16
+  },
+  friend_list: [
+    { friend_name: "hiragi kagami" },
+    { friend_name: "hiragi tsukasa" }
+  ]
+};
+
+const formattedUserInfo = shakeParams(userInfo, {
+  method: "toCamel",
+  melting: {
+    target: ["info"],
+    rules: data => ({
+      userName: data.info["user_name"],
+      age: data.info.age
+    })
+  }
+});
+
+/** formattedUserInfo
+ * { userName: 'konata',
+ *   age: 16,
+ *   friendList:[
+ *    { friendName: 'hiragi kagami' },
+ *    { friendName: 'hiragi tsukasa' }
+ *   ]
+ * }
+ */
 ```
 
 - 5. 使用 `mapping` 对指定 `key` 进行转换
