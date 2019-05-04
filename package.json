@@ -18,9 +18,7 @@
     "url": "git+https://github.com/Konata9/milk-shake.git"
   },
   "keywords": [
-    "params",
     "serialization",
-    "params",
     "deserialization"
   ],
   "author": "Konata9",
