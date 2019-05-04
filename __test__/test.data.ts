@@ -154,6 +154,10 @@ const formattedFullData = {
   job: "engineer"
 };
 
+const userArray = {
+  user_name: ["k", "o", "n", "a", "t", "a"]
+};
+
 export {
   userInfo,
   userInfoMelt,
@@ -173,5 +177,6 @@ export {
   userDumblicateInfo,
   formattedUserInfoAll,
   fullTestData,
-  formattedFullData
+  formattedFullData,
+  userArray
 };

@@ -18,7 +18,8 @@ import {
   userDumblicateInfo,
   formattedUserInfoAll,
   fullTestData,
-  formattedFullData
+  formattedFullData,
+  userArray
 } from "./test.data";
 
 test("shakeParams snake => camel check", () =>
@@ -246,3 +247,10 @@ test("shakeParams full test", () =>
       ]
     })
   ).toEqual(fullTestData));
+
+test("shakeParams array test", () =>
+  expect(
+    shakeParams(userArray, {
+      method: "toCamel"
+    })
+  ).toEqual(userArray));

@@ -140,8 +140,7 @@ function shakeParams(
       } else {
         if (typeCheck(copyParams[key]) === "array") {
           formattedParams[formatMethod(key)] = copyParams[key].map(
-            (innerParam: { [key: string]: any }) =>
-              shakeParams(innerParam, options)
+            (innerParam: any) => shakeParams(innerParam, options)
           );
         } else if (typeCheck(copyParams[key]) === "object") {
           formattedParams[formatMethod(key)] = shakeParams(
