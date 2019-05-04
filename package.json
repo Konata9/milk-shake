@@ -1,6 +1,6 @@
 {
   "name": "@konata9/milk-shake",
-  "version": "1.1.1",
+  "version": "1.2.0",
   "description": "a params serialization and deserialization tool",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
