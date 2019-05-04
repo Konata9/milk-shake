@@ -4,7 +4,12 @@ import { formatSnakeToCamel, formatCamelToSnake } from "./utils";
 interface FormatOptions {
   method: string | RuleFunction;
   exclude?: Array<string>;
+  melting?: MeltingOptions;
   mapping?: Array<MappingOptions>;
+}
+
+interface RuleFunction {
+  (key: string): string;
 }
 
 interface MappingOptions {
@@ -13,8 +18,9 @@ interface MappingOptions {
   rules?: (data: any, from?: string | Array<string>) => any;
 }
 
-interface RuleFunction {
-  (key: string): string;
+interface MeltingOptions {
+  target: Array<string>;
+  rules?: (data: any) => any;
 }
 
 function setFormatMethod(method: string | RuleFunction): RuleFunction {
@@ -87,9 +93,15 @@ function shakeParams(
 
   const copyParams = { ...params };
   const paramKeys = Object.keys(copyParams);
-  const formattedParams: { [key: string]: any } = {};
+  let formattedParams: { [key: string]: any } = {};
 
-  const { method, exclude = [], mapping = [] } = options;
+  const {
+    method,
+    exclude = [],
+    melting = <MeltingOptions>{},
+    mapping = []
+  } = options;
+  const { target = [] } = melting;
 
   if (!["string", "function"].includes(typeCheck(method))) {
     throw new Error("method must be toCamel/toSnake or a function");
@@ -100,6 +112,20 @@ function shakeParams(
   paramKeys.forEach(key => {
     if (exclude.includes(key)) {
       formattedParams[key] = copyParams[key];
+    } else if (target.includes(key)) {
+      const { rules } = melting;
+      if (rules) {
+        const result = rules(copyParams);
+        if (!result || typeCheck(result) !== "object") {
+          throw new Error(
+            "melting rules must provid a return value and the value must be {}"
+          );
+        }
+        formattedParams = {
+          ...formattedParams,
+          ...result
+        };
+      }
     } else {
       const { result, mapItem, mappingIndex } = checkMapping(key, mapping);
       if (result) {

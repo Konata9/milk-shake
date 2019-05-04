@@ -4,6 +4,11 @@ const userInfo = {
   last_name: "ta"
 };
 
+const userInfoMelt = {
+  middleName: "na",
+  lastName: "ta"
+};
+
 const formattedUserInfo = {
   firstName: "ko",
   middleName: "na",
@@ -44,6 +49,21 @@ const userInfoFull = {
     { f_name: "friend 1", f_age: 18 },
     { f_name: "friend 2", f_age: 18 }
   ]
+};
+
+const userInfoFullMelting = {
+  userName: "konata",
+  info: {
+    userAge: 18
+  },
+  friendList: [{ fName: "friend 1" }, { fName: "friend 2" }]
+};
+
+const userInfoFullMelting2 = {
+  userName: "konata",
+  userAge: 18,
+  userGender: "female",
+  friendList: [{ fName: "friend 1", fAge: 18 }, { fName: "friend 2", fAge: 18 }]
 };
 
 const formattedUserInfoFull = {
@@ -136,12 +156,15 @@ const formattedFullData = {
 
 export {
   userInfo,
+  userInfoMelt,
   formattedUserInfo,
   customUserInfo,
   customUserInfo2,
   excludeInfo,
   excludeInfo2,
   userInfoFull,
+  userInfoFullMelting,
+  userInfoFullMelting2,
   formattedUserInfoFull,
   userInfoMapping1,
   userInfoMapping2,

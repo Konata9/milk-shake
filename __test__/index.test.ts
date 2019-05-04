@@ -1,12 +1,15 @@
 import shakeParams from "./../src";
 import {
   userInfo,
+  userInfoMelt,
   formattedUserInfo,
   customUserInfo,
   customUserInfo2,
   excludeInfo,
   excludeInfo2,
   userInfoFull,
+  userInfoFullMelting,
+  userInfoFullMelting2,
   formattedUserInfoFull,
   userInfoMapping1,
   userInfoMapping2,
@@ -63,6 +66,66 @@ test("shakeParams deep test", () =>
       method: "toCamel"
     })
   ).toEqual(formattedUserInfoFull));
+
+test("shakeParams melting rules no return", () =>
+  expect(() =>
+    shakeParams(userInfo, {
+      method: "toCamel",
+      melting: {
+        target: ["first_name"],
+        rules: () => {}
+      }
+    })
+  ).toThrow(
+    "melting rules must provid a return value and the value must be {}"
+  ));
+
+test("shakeParams melting rules return type error", () =>
+  expect(() =>
+    shakeParams(userInfo, {
+      method: "toCamel",
+      melting: {
+        target: ["first_name"],
+        rules: () => "a"
+      }
+    })
+  ).toThrow(
+    "melting rules must provid a return value and the value must be {}"
+  ));
+
+test("shakeParams melting remove key", () =>
+  expect(
+    shakeParams(userInfo, {
+      method: "toCamel",
+      melting: {
+        target: ["first_name"]
+      }
+    })
+  ).toEqual(userInfoMelt));
+
+test("shakeParams melting remove key inside", () =>
+  expect(
+    shakeParams(userInfoFull, {
+      method: "toCamel",
+      melting: {
+        target: ["user_gender", "f_age"]
+      }
+    })
+  ).toEqual(userInfoFullMelting));
+
+test("shakeParams melting with rules", () =>
+  expect(
+    shakeParams(userInfoFull, {
+      method: "toCamel",
+      melting: {
+        target: ["info"],
+        rules: data => ({
+          userAge: data["info"]["user_age"],
+          userGender: data["info"]["user_gender"]
+        })
+      }
+    })
+  ).toEqual(userInfoFullMelting2));
 
 test("shakeParams mapping test", () =>
   expect(
