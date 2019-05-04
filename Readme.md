@@ -71,6 +71,7 @@ const formattedUserInfo = shakeParams(userInfo, {
 - `options`: (_required_) `object` 自定义参数
   - `method`: (_required_) `string` | `function` 格式化方法，详细配置见下文 `method`
   - `exclude`: (default `[]`) `Array` 不需要进行转换的 `key`
+  - `melting`: (default `{}`) `object` 用来移除不需要的 `key` 或者对 `key` 进行降维操作。格式化方法，详细配置见下文 `melting`
   - `mapping`: (default `[]`) `Array` 对 `key` 进行单独处理的配置，详细配置见下文 `mapping`
 
 _返回_**处理后**的 `params` (不会修改原来的 `params`)
@@ -81,6 +82,11 @@ _返回_**处理后**的 `params` (不会修改原来的 `params`)
   - `function` 为自定义 `key` 的转换方法
     - function(key)
       `key` 传入 `params` 的 `key`，必须提供返回值。返回转换后的 `key`（详细用例见后文）。
+
+- `melting`
+
+  - target: (_reqired_) `Array` 需要降维以及移除的 `key`。
+  - rules: (default `null`) `function` 自定义降维规则。当设置此项时，必须返回一个对象。此操作的对象是最终返回的 `params`。
 
 - `mapping`
 
@@ -95,9 +101,9 @@ _返回_**处理后**的 `params` (不会修改原来的 `params`)
       2. `from` 即 `mapping` 中定义的 `from`。方便在 `rules` 中调用。
 
 - 处理顺序
-  程序仅对 `exclude` 之外的 `key` 进行处理；之后进行 `mapping` 的检测，当符合 `mapping` 关系时，根据 `mapping` 的 `rules` 进行处理。
+  程序仅对 `exclude` 之外的 `key` 进行处理；之后进行 `melting` 的检测与处理；再之后进行 `mapping` 的检测，当符合 `mapping` 关系时，根据 `mapping` 的 `rules` 进行处理。
 
-  因此当同时设置了 `method`，`exclude` 和 `mapping` 三个选项时，按照 `exclude` > `mapping` > `method` 的顺序进行处理（更多用例可以见后文）。
+  因此当同时设置了 `method`，`exclude`，`melting` 和 `mapping` 三个选项时，按照 `exclude` > `melting` > `mapping` > `method` 的顺序进行处理（更多用例可以见后文）。
 
 #### more example
 
@@ -156,7 +162,17 @@ const formattedUserInfo = shakeParams(userInfo, {
  */
 ```
 
-- 3. 使用 `mapping` 对指定 `key` 进行转换
+- 3. 使用 `melting` 删除指定的 `key`
+
+```javascript
+```
+
+- 4. 使用 `melting` 对嵌套结构进行扁平化
+
+```javascript
+```
+
+- 5. 使用 `mapping` 对指定 `key` 进行转换
 
 ```javascript
 const userInfo = {
@@ -184,7 +200,7 @@ const formattedUserInfo = shakeParams(userInfo, {
  */
 ```
 
-- 4. 使用 `mapping` 进行数据清洗与整合
+- 6. 使用 `mapping` 进行数据清洗与整合
 
 ```javascript
 const userInfo = {
@@ -242,6 +258,8 @@ const formattedUserInfo = shakeParams(userInfo, {
     {key_2: 'xxx'},
   ]
   ```
+
+- `melting` 和 `exclude` 的区别：`exclude` 是不对 `key` 进行处理，最终输出的结果中会包含 `exclude` 的 `key`。而 `melting` 可以理解为 `delete key` 的操作，`melting` `target` 中的 `key`，理论上不应该出现在最终输出的 `params` 中。
 
 - 使用 `mapping` 时，注意 `to` 的设置，不要出现 `key` 名称的重复，否则会出数据被覆盖的情况。
 

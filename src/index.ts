@@ -113,7 +113,7 @@ function shakeParams(
     if (exclude.includes(key)) {
       formattedParams[key] = copyParams[key];
     } else if (target.includes(key)) {
-      const { rules } = melting;
+      const { rules = null } = melting;
       if (rules) {
         const result = rules(copyParams);
         if (!result || typeCheck(result) !== "object") {
