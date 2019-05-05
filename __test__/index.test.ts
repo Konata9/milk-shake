@@ -19,28 +19,30 @@ import {
   formattedUserInfoAll,
   fullTestData,
   formattedFullData,
-  userArray
+  userArray,
+  deepArrayTest,
+  formattedDeepArrayTest
 } from "./test.data";
 
 test("shakeParams snake => camel check", () =>
-  expect(shakeParams(userInfo, { method: "toCamel" })).toEqual(
+  expect(shakeParams(userInfo, {method: "toCamel"})).toEqual(
     formattedUserInfo
   ));
 
 test("shakeParams camel => snake check", () =>
-  expect(shakeParams(formattedUserInfo, { method: "toSnake" })).toEqual(
+  expect(shakeParams(formattedUserInfo, {method: "toSnake"})).toEqual(
     userInfo
   ));
 
 test("shakeParams customFormatRules test", () =>
-  expect(shakeParams(userInfo, { method: key => `_${key}_` })).toEqual(
+  expect(shakeParams(userInfo, {method: (key) => `_${key}_`})).toEqual(
     customUserInfo
   ));
 
 test("shakeParams customFormatRules test", () =>
   expect(
     shakeParams(userInfo, {
-      method: key =>
+      method: (key) =>
         key
           .split("")
           .reverse()
@@ -50,7 +52,7 @@ test("shakeParams customFormatRules test", () =>
 
 test("shakeParams exclude single test", () =>
   expect(
-    shakeParams(userInfo, { method: "toCamel", exclude: ["middle_name"] })
+    shakeParams(userInfo, {method: "toCamel", exclude: ["middle_name"]})
   ).toEqual(excludeInfo));
 
 test("shakeParams exclude list test", () =>
@@ -120,7 +122,7 @@ test("shakeParams melting with rules", () =>
       method: "toCamel",
       melting: {
         target: ["info"],
-        rules: data => ({
+        rules: (data) => ({
           userAge: data["info"]["user_age"],
           userGender: data["info"]["user_gender"]
         })
@@ -132,7 +134,7 @@ test("shakeParams mapping test", () =>
   expect(
     shakeParams(userInfo, {
       method: "toCamel",
-      mapping: [{ from: "first_name", to: "myFirstName" }]
+      mapping: [{from: "first_name", to: "myFirstName"}]
     })
   ).toEqual(userInfoMapping1));
 
@@ -144,7 +146,7 @@ test("shakeParams mapping rules test", () =>
         {
           from: "first_name",
           to: "myFirstName",
-          rules: data => (data["first_name"] = "Konata10")
+          rules: (data) => (data["first_name"] = "Konata10")
         }
       ]
     })
@@ -158,7 +160,7 @@ test("shakeParams mapping rules combine test", () =>
         {
           from: ["first_name", "middle_name"],
           to: "firstName",
-          rules: data => data["first_name"] + data["middle_name"]
+          rules: (data) => data["first_name"] + data["middle_name"]
         }
       ]
     })
@@ -172,13 +174,13 @@ test("shakeParams multi mapping test", () =>
         {
           from: ["user_name", "info"],
           to: "userInfo",
-          rules: data => ({
+          rules: (data) => ({
             userName: data["user_name"],
             age: data["info"]["user_age"],
             gender: data["info"]["user_gender"]
           })
         },
-        { from: "friendList", to: "friendInfo" }
+        {from: "friendList", to: "friendInfo"}
       ]
     })
   ).toEqual(userInfoFullMapping1));
@@ -188,8 +190,8 @@ test("shakeParams dumplicate name test", () =>
     shakeParams(userInfo, {
       method: "toCamel",
       mapping: [
-        { from: "first_name", to: "first_name" },
-        { from: "middle_name", to: "middle_name" }
+        {from: "first_name", to: "first_name"},
+        {from: "middle_name", to: "middle_name"}
       ]
     })
   ).toEqual(userDumblicateInfo));
@@ -199,7 +201,7 @@ test("shakeParams all test", () =>
     shakeParams(userInfoFull, {
       method: "toCamel",
       exclude: ["user_name"],
-      mapping: [{ from: "user_gender", to: "_user_gender_" }]
+      mapping: [{from: "user_gender", to: "_user_gender_"}]
     })
   ).toEqual(formattedUserInfoAll));
 
@@ -209,11 +211,11 @@ test("shakeParams full test", () =>
       method: "toCamel",
       exclude: ["Type"],
       mapping: [
-        { from: "extra", to: "job", rules: data => data["extra"]["job"] },
+        {from: "extra", to: "job", rules: (data) => data["extra"]["job"]},
         {
           from: "user_address",
           to: "address",
-          rules: data =>
+          rules: (data) =>
             `${data["user_address"]["code"]}-${data["user_address"]["address"]}`
         }
       ]
@@ -229,14 +231,14 @@ test("shakeParams full test", () =>
         {
           from: "job",
           to: "extra",
-          rules: data => ({
+          rules: (data) => ({
             job: data["job"]
           })
         },
         {
           from: "address",
           to: "user_address",
-          rules: data => {
+          rules: (data) => {
             const addressInfo = data.address.split("-");
             return {
               code: addressInfo[0],
@@ -254,3 +256,10 @@ test("shakeParams array test", () =>
       method: "toCamel"
     })
   ).toEqual(userArray));
+
+test("shakeParams array deep test", () =>
+  expect(
+    shakeParams(deepArrayTest, {
+      method: "toCamel"
+    })
+  ).toEqual(formattedDeepArrayTest));

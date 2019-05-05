@@ -1,5 +1,5 @@
 import typeCheck from "@konata9/typecheck.js";
-import { formatSnakeToCamel, formatCamelToSnake } from "./utils";
+import {formatSnakeToCamel, formatCamelToSnake} from "./utils";
 
 interface FormatOptions {
   method: string | RuleFunction;
@@ -43,8 +43,8 @@ function checkMapping(
   mappingIndex: number;
 } {
   let mappingIndex = 0;
-  const mapItem = mapping.find(item => {
-    const { from } = item;
+  const mapItem = mapping.find((item) => {
+    const {from} = item;
     if (typeCheck(from) === "string") {
       return key === from;
     } else {
@@ -62,11 +62,11 @@ function checkMapping(
 }
 
 function formatMapping(
-  params: { [key: string]: any },
+  params: {[key: string]: any},
   mapItem: MappingOptions
 ): any {
-  const copyParams = { ...params };
-  const { from, rules = null } = mapItem;
+  const copyParams = {...params};
+  const {from, rules = null} = mapItem;
   if (!rules) {
     const fromKey = typeCheck(from) === "string" ? <string>from : from[0];
     return copyParams[fromKey];
@@ -75,8 +75,23 @@ function formatMapping(
   }
 }
 
+function formatArrayParams(
+  params: {[key: string]: any},
+  options: FormatOptions
+): any {
+  if (typeCheck(params) === "array") {
+    return params.map((innerParams: any) =>
+      formatArrayParams(innerParams, options)
+    );
+  } else if (typeCheck(params) === "object") {
+    return shakeParams(params, options);
+  } else {
+    return params;
+  }
+}
+
 function shakeParams(
-  params: { [key: string]: any },
+  params: {[key: string]: any},
   options: FormatOptions
 ): object {
   if (!params) {
@@ -91,9 +106,9 @@ function shakeParams(
     return params;
   }
 
-  const copyParams = { ...params };
+  const copyParams = {...params};
   const paramKeys = Object.keys(copyParams);
-  let formattedParams: { [key: string]: any } = {};
+  let formattedParams: {[key: string]: any} = {};
 
   const {
     method,
@@ -101,7 +116,7 @@ function shakeParams(
     melting = <MeltingOptions>{},
     mapping = []
   } = options;
-  const { target = [] } = melting;
+  const {target = []} = melting;
 
   if (!["string", "function"].includes(typeCheck(method))) {
     throw new Error("method must be toCamel/toSnake or a function");
@@ -109,11 +124,11 @@ function shakeParams(
 
   const formatMethod = setFormatMethod(method);
 
-  paramKeys.forEach(key => {
+  paramKeys.forEach((key) => {
     if (exclude.includes(key)) {
       formattedParams[key] = copyParams[key];
     } else if (target.includes(key)) {
-      const { rules = null } = melting;
+      const {rules = null} = melting;
       if (rules) {
         const result = rules(copyParams);
         if (!result || typeCheck(result) !== "object") {
@@ -127,9 +142,9 @@ function shakeParams(
         };
       }
     } else {
-      const { result, mapItem, mappingIndex } = checkMapping(key, mapping);
+      const {result, mapItem, mappingIndex} = checkMapping(key, mapping);
       if (result) {
-        const { to } = <MappingOptions>mapItem;
+        const {to} = <MappingOptions>mapItem;
         // 当 mapping 的 from 为数组时，处理在第一个匹配的时候就已经完成了。
         //当 key 为 from 数组的第二个及之后元素时，跳过处理
         if (mappingIndex < 1) {
@@ -140,7 +155,7 @@ function shakeParams(
       } else {
         if (typeCheck(copyParams[key]) === "array") {
           formattedParams[formatMethod(key)] = copyParams[key].map(
-            (innerParam: any) => shakeParams(innerParam, options)
+            (innerParam: any) => formatArrayParams(innerParam, options)
           );
         } else if (typeCheck(copyParams[key]) === "object") {
           formattedParams[formatMethod(key)] = shakeParams(
@@ -157,5 +172,5 @@ function shakeParams(
   return formattedParams;
 }
 
-export { formatSnakeToCamel, formatCamelToSnake, shakeParams };
+export {formatSnakeToCamel, formatCamelToSnake, shakeParams};
 export default shakeParams;

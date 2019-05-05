@@ -45,10 +45,7 @@ const userInfoFull = {
     user_age: 18,
     user_gender: "female"
   },
-  friendList: [
-    { f_name: "friend 1", f_age: 18 },
-    { f_name: "friend 2", f_age: 18 }
-  ]
+  friendList: [{f_name: "friend 1", f_age: 18}, {f_name: "friend 2", f_age: 18}]
 };
 
 const userInfoFullMelting = {
@@ -56,14 +53,14 @@ const userInfoFullMelting = {
   info: {
     userAge: 18
   },
-  friendList: [{ fName: "friend 1" }, { fName: "friend 2" }]
+  friendList: [{fName: "friend 1"}, {fName: "friend 2"}]
 };
 
 const userInfoFullMelting2 = {
   userName: "konata",
   userAge: 18,
   userGender: "female",
-  friendList: [{ fName: "friend 1", fAge: 18 }, { fName: "friend 2", fAge: 18 }]
+  friendList: [{fName: "friend 1", fAge: 18}, {fName: "friend 2", fAge: 18}]
 };
 
 const formattedUserInfoFull = {
@@ -72,7 +69,7 @@ const formattedUserInfoFull = {
     userAge: 18,
     userGender: "female"
   },
-  friendList: [{ fName: "friend 1", fAge: 18 }, { fName: "friend 2", fAge: 18 }]
+  friendList: [{fName: "friend 1", fAge: 18}, {fName: "friend 2", fAge: 18}]
 };
 
 const userInfoMapping1 = {
@@ -98,10 +95,7 @@ const userInfoFullMapping1 = {
     age: 18,
     gender: "female"
   },
-  friendInfo: [
-    { f_name: "friend 1", f_age: 18 },
-    { f_name: "friend 2", f_age: 18 }
-  ]
+  friendInfo: [{f_name: "friend 1", f_age: 18}, {f_name: "friend 2", f_age: 18}]
 };
 
 const userDumblicateInfo = {
@@ -116,13 +110,13 @@ const formattedUserInfoAll = {
     userAge: 18,
     _user_gender_: "female"
   },
-  friendList: [{ fName: "friend 1", fAge: 18 }, { fName: "friend 2", fAge: 18 }]
+  friendList: [{fName: "friend 1", fAge: 18}, {fName: "friend 2", fAge: 18}]
 };
 
 const fullTestData = {
   user_name: "konata",
-  info: { user_country: "china", user_city: "sh" },
-  user_address: { code: "12345", address: "aaabbbccc" },
+  info: {user_country: "china", user_city: "sh"},
+  user_address: {code: "12345", address: "aaabbbccc"},
   friend_list: [
     {
       first_name: "a",
@@ -147,15 +141,61 @@ const formattedFullData = {
   },
   address: "12345-aaabbbccc",
   friendList: [
-    { firstName: "a", lastName: "b" },
-    { firstName: "c", lastName: "d" }
+    {firstName: "a", lastName: "b"},
+    {firstName: "c", lastName: "d"}
   ],
   Type: 2,
   job: "engineer"
 };
 
 const userArray = {
-  user_name: ["k", "o", "n", "a", "t", "a"]
+  userName: ["k", "o", "n", "a", "t", "a"]
+};
+
+const deepArrayTest = {
+  user_name: "konata",
+  info: {
+    friends: [
+      {friend_name: "f1", friend_age: 20},
+      [
+        "a",
+        "b",
+        {
+          inner_list: ["a", "b"],
+          inner_info: {
+            info_a: "a",
+            info_b: "b"
+          }
+        },
+        1,
+        2,
+        [3, 4, 5, [6, 7, {deep_inner: 8}]]
+      ]
+    ]
+  }
+};
+
+const formattedDeepArrayTest = {
+  userName: "konata",
+  info: {
+    friends: [
+      {friendName: "f1", friendAge: 20},
+      [
+        "a",
+        "b",
+        {
+          innerList: ["a", "b"],
+          innerInfo: {
+            infoA: "a",
+            infoB: "b"
+          }
+        },
+        1,
+        2,
+        [3, 4, 5, [6, 7, {deepInner: 8}]]
+      ]
+    ]
+  }
 };
 
 export {
@@ -178,5 +218,7 @@ export {
   formattedUserInfoAll,
   fullTestData,
   formattedFullData,
-  userArray
+  userArray,
+  deepArrayTest,
+  formattedDeepArrayTest
 };

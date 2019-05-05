@@ -25,9 +25,9 @@ npm i @konata9/milk-shake
 ```javascript
 import shakeParams from "@konata9/milk-shake";
 // or
-import { shakeParams } from "@konata9/milk-shake";
+import {shakeParams} from "@konata9/milk-shake";
 // or
-const { shakeParams } = require("@konata9/milk-shake");
+const {shakeParams} = require("@konata9/milk-shake");
 ```
 
 #### 2. 使用
@@ -38,10 +38,7 @@ import shakeParams from "@konata9/milk-shake";
 const userInfo = {
   user_name: "konata",
   age: 16,
-  friend_list: [
-    { friend_name: "hiragi kagami" },
-    { friend_name: "hiragi tsukasa" }
-  ]
+  friend_list: [{friend_name: "hiragi kagami"}, {friend_name: "hiragi tsukasa"}]
 };
 
 const formattedUserInfo = shakeParams(userInfo, {
@@ -80,8 +77,7 @@ _返回_**处理后**的 `params` (不会修改原来的 `params`)
 
   - `string` 接受 `"toCamel"` 和 `"toSnake"` 两种方法，分别将 `key` 转换为**驼峰**或**下划线**的形式。
   - `function` 为自定义 `key` 的转换方法
-    - function(key)
-      `key` 传入 `params` 的 `key`，必须提供返回值。返回转换后的 `key`（详细用例见后文）。
+    - function(key) `key` 传入 `params` 的 `key`，必须提供返回值。返回转换后的 `key`（详细用例见后文）。
 
 - `melting`
 
@@ -100,8 +96,7 @@ _返回_**处理后**的 `params` (不会修改原来的 `params`)
 
       2. `from` 即 `mapping` 中定义的 `from`。方便在 `rules` 中调用。
 
-- 处理顺序
-  程序仅对 `exclude` 之外的 `key` 进行处理；之后进行 `melting` 的检测与处理；再之后进行 `mapping` 的检测，当符合 `mapping` 关系时，根据 `mapping` 的 `rules` 进行处理。
+- 处理顺序程序仅对 `exclude` 之外的 `key` 进行处理；之后进行 `melting` 的检测与处理；再之后进行 `mapping` 的检测，当符合 `mapping` 关系时，根据 `mapping` 的 `rules` 进行处理。
 
   因此当同时设置了 `method`，`exclude`，`melting` 和 `mapping` 三个选项时，按照 `exclude` > `melting` > `mapping` > `method` 的顺序进行处理（更多用例可以见后文）。
 
@@ -113,14 +108,11 @@ _返回_**处理后**的 `params` (不会修改原来的 `params`)
 const userInfo = {
   user_name: "konata",
   age: 16,
-  friend_list: [
-    { friend_name: "hiragi kagami" },
-    { friend_name: "hiragi tsukasa" }
-  ]
+  friend_list: [{friend_name: "hiragi kagami"}, {friend_name: "hiragi tsukasa"}]
 };
 
 const formattedUserInfo = shakeParams(userInfo, {
-  method: key => `_${key}_` // 所有的 key 会在前后加 下划线
+  method: (key) => `_${key}_` // 所有的 key 会在前后加 下划线
 });
 
 /** formattedUserInfo
@@ -140,10 +132,7 @@ const formattedUserInfo = shakeParams(userInfo, {
 const userInfo = {
   user_name: "konata",
   age: 16,
-  friend_list: [
-    { friend_name: "hiragi kagami" },
-    { friend_name: "hiragi tsukasa" }
-  ]
+  friend_list: [{friend_name: "hiragi kagami"}, {friend_name: "hiragi tsukasa"}]
 };
 
 const formattedUserInfo = shakeParams(userInfo, {
@@ -168,10 +157,7 @@ const formattedUserInfo = shakeParams(userInfo, {
 const userInfo = {
   user_name: "konata",
   age: 16,
-  friend_list: [
-    { friend_name: "hiragi kagami" },
-    { friend_name: "hiragi tsukasa" }
-  ]
+  friend_list: [{friend_name: "hiragi kagami"}, {friend_name: "hiragi tsukasa"}]
 };
 
 const formattedUserInfo = shakeParams(userInfo, {
@@ -199,17 +185,14 @@ const userInfo = {
     user_name: "konata",
     age: 16
   },
-  friend_list: [
-    { friend_name: "hiragi kagami" },
-    { friend_name: "hiragi tsukasa" }
-  ]
+  friend_list: [{friend_name: "hiragi kagami"}, {friend_name: "hiragi tsukasa"}]
 };
 
 const formattedUserInfo = shakeParams(userInfo, {
   method: "toCamel",
   melting: {
     target: ["info"],
-    rules: data => ({
+    rules: (data) => ({
       userName: data.info["user_name"],
       age: data.info.age
     })
@@ -233,15 +216,12 @@ const formattedUserInfo = shakeParams(userInfo, {
 const userInfo = {
   user_name: "konata",
   age: 16,
-  friend_list: [
-    { friend_name: "hiragi kagami" },
-    { friend_name: "hiragi tsukasa" }
-  ]
+  friend_list: [{friend_name: "hiragi kagami"}, {friend_name: "hiragi tsukasa"}]
 };
 
 const formattedUserInfo = shakeParams(userInfo, {
   method: "toCamel",
-  mapping: [{ from: "age", to: "userAge" }] // 简单的 from => to 的映射
+  mapping: [{from: "age", to: "userAge"}] // 简单的 from => to 的映射
 });
 
 /** formattedUserInfo
@@ -261,10 +241,7 @@ const formattedUserInfo = shakeParams(userInfo, {
 const userInfo = {
   user_name: "konata",
   age: 16,
-  friend_list: [
-    { friend_name: "hiragi kagami" },
-    { friend_name: "hiragi tsukasa" }
-  ]
+  friend_list: [{friend_name: "hiragi kagami"}, {friend_name: "hiragi tsukasa"}]
 };
 
 const formattedUserInfo = shakeParams(userInfo, {
