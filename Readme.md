@@ -65,8 +65,8 @@ const formattedUserInfo = shakeParams(userInfo, {
 #### shakeParams(params, options)
 
 - `params`: (_required_) `object` 需要处理的对象
-- `options`: (_required_) `object` 自定义参数
-  - `method`: (_required_) `string` | `function` 格式化方法，详细配置见下文 `method`
+- `options`: (default `{}`) `object` 自定义参数
+  - `method`: (default `null`) `string` | `function` 格式化方法，详细配置见下文 `method`
   - `exclude`: (default `[]`) `Array` 不需要进行转换的 `key`
   - `melting`: (default `{}`) `object` 用来移除不需要的 `key` 或者对 `key` 进行降维操作。格式化方法，详细配置见下文 `melting`
   - `mapping`: (default `[]`) `Array` 对 `key` 进行单独处理的配置，详细配置见下文 `mapping`
@@ -78,6 +78,7 @@ _返回_**处理后**的 `params` (不会修改原来的 `params`)
   - `string` 接受 `"toCamel"` 和 `"toSnake"` 两种方法，分别将 `key` 转换为**驼峰**或**下划线**的形式。
   - `function` 为自定义 `key` 的转换方法
     - function(key) `key` 传入 `params` 的 `key`，必须提供返回值。返回转换后的 `key`（详细用例见后文）。
+  - 如果不设置 `method` 则，不会对 `key` 做任何转换操作
 
 - `melting`
 

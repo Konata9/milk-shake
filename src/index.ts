@@ -2,7 +2,7 @@ import typeCheck from "@konata9/typecheck.js";
 import {formatSnakeToCamel, formatCamelToSnake} from "./utils";
 
 interface FormatOptions {
-  method: string | RuleFunction;
+  method?: string | RuleFunction;
   exclude?: Array<string>;
   melting?: MeltingOptions;
   mapping?: Array<MappingOptions>;
@@ -23,15 +23,41 @@ interface MeltingOptions {
   rules?: (data: any) => any;
 }
 
-function setFormatMethod(method: string | RuleFunction): RuleFunction {
+function setFormatMethod(
+  method: string | RuleFunction | undefined
+): RuleFunction {
   let formatMethod: RuleFunction;
-  if (typeCheck(method) === "function") {
+
+  if (!method) {
+    formatMethod = (key) => key;
+  } else if (typeCheck(method) === "function") {
     formatMethod = <RuleFunction>method;
   } else {
     formatMethod =
       method === "toCamel" ? formatSnakeToCamel : formatCamelToSnake;
   }
   return formatMethod;
+}
+
+function handleMeltingRules(
+  params: {[key: string]: any},
+  melting: MeltingOptions
+): object {
+  const copyParams = {...params};
+  const {rules = null} = melting;
+  let meltResult = {};
+
+  if (rules) {
+    const result = rules(copyParams);
+    if (!result || typeCheck(result) !== "object") {
+      throw new Error(
+        "melting rules must provid a return value and the value must be {}"
+      );
+    }
+    meltResult = result;
+  }
+
+  return meltResult;
 }
 
 function checkMapping(
@@ -66,18 +92,21 @@ function formatMapping(
   mapItem: MappingOptions
 ): any {
   const copyParams = {...params};
-  const {from, rules = null} = mapItem;
+  const {from, rules} = mapItem;
   if (!rules) {
     const fromKey = typeCheck(from) === "string" ? <string>from : from[0];
     return copyParams[fromKey];
   } else {
+    if (typeCheck(rules) !== "function") {
+      throw new Error("Mapping rules must be a function");
+    }
     return rules(copyParams, from);
   }
 }
 
 function formatArrayParams(
   params: {[key: string]: any},
-  options: FormatOptions
+  options: FormatOptions = {}
 ): any {
   if (typeCheck(params) === "array") {
     return params.map((innerParams: any) =>
@@ -92,7 +121,7 @@ function formatArrayParams(
 
 function shakeParams(
   params: {[key: string]: any},
-  options: FormatOptions
+  options: FormatOptions = {}
 ): object {
   if (!params) {
     throw new Error("input can not be null value");
@@ -111,14 +140,15 @@ function shakeParams(
   let formattedParams: {[key: string]: any} = {};
 
   const {
-    method,
-    exclude = [],
-    melting = <MeltingOptions>{},
+    method, 
+    exclude = [], 
+    melting = <MeltingOptions>{}, 
     mapping = []
-  } = options;
+  } = <FormatOptions>options;
+
   const {target = []} = melting;
 
-  if (!["string", "function"].includes(typeCheck(method))) {
+  if (method && !["string", "function"].includes(typeCheck(method))) {
     throw new Error("method must be toCamel/toSnake or a function");
   }
 
@@ -128,19 +158,10 @@ function shakeParams(
     if (exclude.includes(key)) {
       formattedParams[key] = copyParams[key];
     } else if (target.includes(key)) {
-      const {rules = null} = melting;
-      if (rules) {
-        const result = rules(copyParams);
-        if (!result || typeCheck(result) !== "object") {
-          throw new Error(
-            "melting rules must provid a return value and the value must be {}"
-          );
-        }
-        formattedParams = {
-          ...formattedParams,
-          ...result
-        };
-      }
+      formattedParams = {
+        ...formattedParams,
+        ...handleMeltingRules(copyParams, melting)
+      };
     } else {
       const {result, mapItem, mappingIndex} = checkMapping(key, mapping);
       if (result) {

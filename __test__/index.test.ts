@@ -263,3 +263,6 @@ test("shakeParams array deep test", () =>
       method: "toCamel"
     })
   ).toEqual(formattedDeepArrayTest));
+
+test("shakeParams widthout method", () =>
+  expect(shakeParams(userInfo)).toEqual(userInfo));
