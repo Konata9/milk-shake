@@ -11,10 +11,9 @@ function formatSnakeToCamel(snake: string): string {
 
   return snake
     .split("_")
-    .filter((str: string): boolean => !!str)
-    .map(
-      (str: string, index: number): string =>
-        index > 0 ? str[0].toUpperCase() + str.slice(1) : str
+    .filter(str => !!str)
+    .map((str, index) =>
+      index > 0 ? str[0].toUpperCase() + str.slice(1) : str
     )
     .join("");
 }
@@ -31,11 +30,9 @@ function formatCamelToSnake(camel: string): string {
   const camelStr = camel[0].toLowerCase() + camel.slice(1);
   const matches: Array<string> = camelStr.match(/[A-Z]/g) || [];
   let snake: string = camelStr;
-  matches.forEach(
-    (word: string): void => {
-      snake = snake.replace(word, `_${word.toLowerCase()}`);
-    }
-  );
+  matches.forEach(word => {
+    snake = snake.replace(word, `_${word.toLowerCase()}`);
+  });
   return snake;
 }
 
