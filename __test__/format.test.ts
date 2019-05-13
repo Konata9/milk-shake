@@ -112,8 +112,7 @@ test("format custom test", () =>
     customObjectWithObject
   ));
 
-// with array
-// with deep object
+// with array & deep object
 const snakeObjectWithArray = {
   user_name: "konata",
   course_list: [1, 2, 3, "a", "b", "c"],
@@ -144,4 +143,104 @@ test("format custom test", () =>
     customObjectWithArray
   ));
 
+// with array & deep array
+const snakeObjectWithDeepArray = {
+  user_name: "konata",
+  score_list: [[1, 2, 3, [4, 5, 6]]]
+};
+const camelObjectWithDeepArray = {
+  userName: "konata",
+  scoreList: [[1, 2, 3, [4, 5, 6]]]
+};
+test("format camel/snake test", () =>
+  expect(format("toCamel")(snakeObjectWithDeepArray)).toEqual(
+    camelObjectWithDeepArray
+  ));
+
+test("format camel/snake test", () =>
+  expect(format("toSnake")(camelObjectWithDeepArray)).toEqual(
+    snakeObjectWithDeepArray
+  ));
+
+const customObjectWithDeepArray = {
+  _user_name_: "konata",
+  _score_list_: [[1, 2, 3, [4, 5, 6]]]
+};
+test("format custom test", () =>
+  expect(format((key) => `_${key}_`)(snakeObjectWithDeepArray)).toEqual(
+    customObjectWithDeepArray
+  ));
+
 // with deep object/array mix
+const snakeObjectWithMix = {
+  user_name: "konata",
+  user_age: 18,
+  user_school: null,
+  score_list: [
+    [1, 2, 3, [4, 5, 6]],
+    {
+      course_list: [
+        "english",
+        "math",
+        {
+          other: [{course_name: "other", course_score: [5, 4, 3]}]
+        }
+      ]
+    }
+  ],
+  friend_list: [{f_name: "a", f_age: 16}, {f_name: "b", f_age: 18}]
+};
+const camelObjectWithMix = {
+  userName: "konata",
+  user_age: 18,
+  userSchool: null,
+  scoreList: [
+    [1, 2, 3, [4, 5, 6]],
+    {
+      courseList: [
+        "english",
+        "math",
+        {
+          other: [{course_name: "other", courseScore: [5, 4, 3]}]
+        }
+      ]
+    }
+  ],
+  friendList: [{fName: "a", f_age: 16}, {fName: "b", f_age: 18}]
+};
+test("format camel/snake test", () =>
+  expect(
+    format("toCamel", ["user_age", "course_name", "f_age"])(snakeObjectWithMix)
+  ).toEqual(camelObjectWithMix));
+
+test("format camel/snake test", () =>
+  expect(
+    format("toSnake", ["user_age", "course_name", "f_age"])(
+      camelObjectWithMix
+    )
+  ).toEqual(snakeObjectWithMix));
+
+const customObjectWithMix = {
+  _user_name_: "konata",
+  user_age: 18,
+  _user_school_: null,
+  _score_list_: [
+    [1, 2, 3, [4, 5, 6]],
+    {
+      _course_list_: [
+        "english",
+        "math",
+        {
+          _other_: [{course_name: "other", _course_score_: [5, 4, 3]}]
+        }
+      ]
+    }
+  ],
+  _friend_list_: [{_f_name_: "a", f_age: 16}, {_f_name_: "b", f_age: 18}]
+};
+test("format custom test", () =>
+  expect(
+    format((key) => `_${key}_`, ["user_age", "course_name", "f_age"])(
+      snakeObjectWithMix
+    )
+  ).toEqual(customObjectWithMix));
