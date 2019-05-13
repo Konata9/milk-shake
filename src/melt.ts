@@ -46,7 +46,8 @@ const checkResult = (result: any) => {
 
 const formatTarget = (target: string): string => {
   let _target = "copyParams";
-  // 多层对象时使用 . 分割，为了获取多层对象内部的值，采用 eval 拼接字符串
+  // 多层对象时使用 . 分割
+  // 为了获取多层对象内部的值，采用 eval 拼接字符串
   target.split(".").forEach(key => {
     _target += `['${key}']`;
   });

@@ -35,14 +35,14 @@ const checkMapItem = (mapItem: MapOption) => {
   }
 };
 
-const checkResult = (result: any) => {
-  if (!result) {
-    throw new Error("rule function must hava a return value");
-  }
-
-  if (typeCheck(result) !== "object") {
-    throw new Error("rule function must hava a {}");
-  }
+const formatTarget = (target: string): string => {
+  let _target = "copyParams";
+  // 多层对象时使用 . 分割
+  // 为了获取多层对象内部的值，采用 eval 拼接字符串
+  target.split(".").forEach(key => {
+    _target += `['${key}']`;
+  });
+  return _target;
 };
 
 const map = (mapList: Array<MapOption>) => {
@@ -53,16 +53,20 @@ const map = (mapList: Array<MapOption>) => {
     mapList.forEach(mapItem => {
       checkMapItem(mapItem);
       const { from, to, rule = null } = mapItem;
+      const _from = formatTarget(from);
+      const _to = formatTarget(to);
+
       if (rule) {
-        const result = rule(copyParams[from], params);
-        checkResult(result);
-        copyParams[to] = result;
+        eval(`${_to}=rule(${_from}, copyParams)`);
       } else {
-        copyParams[to] = copyParams[from];
+        eval(`${_to}=${_from}`);
       }
+
+      eval(`delete ${_from}`);
     });
+
     return copyParams;
   };
 };
 
-export { checkMapMethodParams, checkMapItem, checkResult, map };
+export { checkMapMethodParams, map };
