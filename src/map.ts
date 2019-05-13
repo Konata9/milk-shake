@@ -65,4 +65,4 @@ const map = (mapList: Array<MapOption>) => {
   };
 };
 
-export {map};
+export {checkMapMethodParams, checkMapItem, checkResult, map};

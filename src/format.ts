@@ -77,7 +77,7 @@ const format = (
         } else if (typeCheck(paramsValue) === "object") {
           result[key] = format(method, excludes)(paramsValue);
         } else {
-          result[key] = formatMethod(key);
+          result[formatMethod(key)] = copyParams[key];
         }
       }
     });
@@ -85,4 +85,4 @@ const format = (
   };
 };
 
-export {format};
+export {checkFormatMethodParams, setFormatMethod, format};

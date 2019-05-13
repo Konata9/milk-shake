@@ -1,11 +1,24 @@
 import {format} from "./format";
 import {melt} from "./melt";
-import {map} from './map';
+import {map} from "./map";
+import typeCheck from "@konata9/typecheck.js";
 
-function shake(params: {[key: string]: any}) {
+const checkParams = (params: any) => {
+  if (!params) {
+    throw new Error("params can not be null");
+  }
+
+  if (typeCheck(params) !== "object") {
+    throw new Error("params must be {}");
+  }
+};
+
+const shake = (params: {[key: string]: any}) => {
+  checkParams(params);
   return (...formatters: [any]) => {
     return [...formatters].reduce((prev, current) => current(prev), params);
   };
-}
+};
 
-export {shake, format, melt, map};
+export {checkParams, shake, format, melt, map};
+export default shake
