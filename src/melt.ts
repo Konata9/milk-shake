@@ -70,4 +70,4 @@ const melt = (meltList: Array<MeltOption>) => {
   };
 };
 
-export {checkMeltMethodParams, checkMeltItem, checkResult, melt};
+export {checkMeltMethodParams, melt};
