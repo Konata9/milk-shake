@@ -1,6 +1,6 @@
-import {format} from "./format";
-import {melt} from "./melt";
-import {map} from "./map";
+import { format } from "./format";
+import { melt } from "./melt";
+import { map } from "./map";
 import typeCheck from "@konata9/typecheck.js";
 
 const checkParams = (params: any) => {
@@ -13,12 +13,12 @@ const checkParams = (params: any) => {
   }
 };
 
-const shake = (params: {[key: string]: any}) => {
+const shake = (params: { [key: string]: any }) => {
   checkParams(params);
   return (...formatters: [any]) => {
     return [...formatters].reduce((prev, current) => current(prev), params);
   };
 };
 
-export {checkParams, shake, format, melt, map};
-export default shake
+export { checkParams, shake, format, melt, map };
+export default shake;

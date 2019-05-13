@@ -1,7 +1,7 @@
 import typeCheck from "@konata9/typecheck.js";
 
 interface RuleFunction {
-  (current: any, data: {[key: string]: any}): any;
+  (current: any, data: { [key: string]: any }): any;
 }
 
 interface MeltOption {
@@ -20,7 +20,7 @@ const checkMeltMethodParams = (meltList: any) => {
 };
 
 const checkMeltItem = (meltItem: MeltOption) => {
-  const {target, rule = null} = meltItem;
+  const { target, rule = null } = meltItem;
   if (!target) {
     throw new Error("property target is required");
   }
@@ -44,22 +44,34 @@ const checkResult = (result: any) => {
   }
 };
 
+const formatTarget = (target: string): string => {
+  let _target = "copyParams";
+  // 多层对象时使用 . 分割，为了获取多层对象内部的值，采用 eval 拼接字符串
+  target.split(".").forEach(key => {
+    _target += `['${key}']`;
+  });
+  return _target;
+};
+
 const melt = (meltList: Array<MeltOption>) => {
   checkMeltMethodParams(meltList);
 
-  return (params: {[key: string]: any}): {[key: string]: any} => {
-    let copyParams = {...params};
+  return (params: { [key: string]: any }): { [key: string]: any } => {
+    let copyParams = { ...params };
 
-    meltList.forEach((meltItem) => {
+    meltList.forEach(meltItem => {
       checkMeltItem(meltItem);
-      const {target, rule = null} = meltItem;
+      const { target, rule = null } = meltItem;
       let result = {};
 
+      let _target = formatTarget(target);
+
       if (rule) {
-        result = rule(copyParams[target], copyParams);
+        result = rule(eval(_target), copyParams);
         checkResult(result);
       }
-      delete copyParams[target];
+
+      eval(`delete ${_target}`);
       copyParams = {
         ...copyParams,
         ...result
@@ -70,4 +82,4 @@ const melt = (meltList: Array<MeltOption>) => {
   };
 };
 
-export {checkMeltMethodParams, melt};
+export { checkMeltMethodParams, melt };

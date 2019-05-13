@@ -1,7 +1,7 @@
 import typeCheck from "@konata9/typecheck.js";
 
 interface RuleFunction {
-  (current: any, data: {[key: string]: any}): any;
+  (current: any, data: { [key: string]: any }): any;
 }
 
 interface MapOption {
@@ -21,7 +21,7 @@ const checkMapMethodParams = (mapList: any) => {
 };
 
 const checkMapItem = (mapItem: MapOption) => {
-  const {from, to, rule = null} = mapItem;
+  const { from, to, rule = null } = mapItem;
   if (!from || !to) {
     throw new Error("property 'from' and 'to' are required");
   }
@@ -47,12 +47,12 @@ const checkResult = (result: any) => {
 
 const map = (mapList: Array<MapOption>) => {
   checkMapMethodParams(mapList);
-  return (params: {[key: string]: any}): {[key: string]: any} => {
-    let copyParams = {...params};
+  return (params: { [key: string]: any }): { [key: string]: any } => {
+    let copyParams = { ...params };
 
-    mapList.forEach((mapItem) => {
+    mapList.forEach(mapItem => {
       checkMapItem(mapItem);
-      const {from, to, rule = null} = mapItem;
+      const { from, to, rule = null } = mapItem;
       if (rule) {
         const result = rule(copyParams[from], params);
         checkResult(result);
@@ -65,4 +65,4 @@ const map = (mapList: Array<MapOption>) => {
   };
 };
 
-export {checkMapMethodParams, checkMapItem, checkResult, map};
+export { checkMapMethodParams, checkMapItem, checkResult, map };
