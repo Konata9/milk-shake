@@ -61,9 +61,87 @@ test("format custom test", () =>
   ).toEqual(customObjectWithExclude));
 
 // null value
+const snakeObjectWithNull = {user_name: "konata", user_age: null};
+const camelObjectWithNull = {userName: "konata", userAge: null};
+test("format camel/snake test", () =>
+  expect(format("toCamel")(snakeObjectWithNull)).toEqual(camelObjectWithNull));
+
+test("format camel/snake test", () =>
+  expect(format("toSnake")(camelObjectWithNull)).toEqual(snakeObjectWithNull));
+
+const customObjectWithNull = {_user_name_: "konata", _user_age_: null};
+test("format custom test", () =>
+  expect(format((key) => `_${key}_`)(snakeObjectWithNull)).toEqual(
+    customObjectWithNull
+  ));
 
 // with deep object
+const snakeObjectWithObject = {
+  user_name: "konata",
+  contact_way: {
+    cell_phone: 12345678901,
+    mail_address: "123@123.com"
+  }
+};
+const camelObjectWithObject = {
+  userName: "konata",
+  contactWay: {
+    cellPhone: 12345678901,
+    mailAddress: "123@123.com"
+  }
+};
+test("format camel/snake test", () =>
+  expect(format("toCamel")(snakeObjectWithObject)).toEqual(
+    camelObjectWithObject
+  ));
+
+test("format camel/snake test", () =>
+  expect(format("toSnake")(camelObjectWithObject)).toEqual(
+    snakeObjectWithObject
+  ));
+
+const customObjectWithObject = {
+  _user_name_: "konata",
+  _contact_way_: {
+    _cell_phone_: 12345678901,
+    _mail_address_: "123@123.com"
+  }
+};
+test("format custom test", () =>
+  expect(format((key) => `_${key}_`)(snakeObjectWithObject)).toEqual(
+    customObjectWithObject
+  ));
 
 // with array
+// with deep object
+const snakeObjectWithArray = {
+  user_name: "konata",
+  course_list: [1, 2, 3, "a", "b", "c"],
+  friend_list: [{f_name: "a", f_age: 16}, {f_name: "b", f_age: 18}]
+};
+const camelObjectWithArray = {
+  userName: "konata",
+  courseList: [1, 2, 3, "a", "b", "c"],
+  friendList: [{fName: "a", fAge: 16}, {fName: "b", fAge: 18}]
+};
+test("format camel/snake test", () =>
+  expect(format("toCamel")(snakeObjectWithArray)).toEqual(
+    camelObjectWithArray
+  ));
+
+test("format camel/snake test", () =>
+  expect(format("toSnake")(camelObjectWithArray)).toEqual(
+    snakeObjectWithArray
+  ));
+
+const customObjectWithArray = {
+  _user_name_: "konata",
+  _course_list_: [1, 2, 3, "a", "b", "c"],
+  _friend_list_: [{_f_name_: "a", _f_age_: 16}, {_f_name_: "b", _f_age_: 18}]
+};
+test("format custom test", () =>
+  expect(format((key) => `_${key}_`)(snakeObjectWithArray)).toEqual(
+    customObjectWithArray
+  ));
 
 // with deep object/array mix

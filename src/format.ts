@@ -73,9 +73,13 @@ const format = (
         result[key] = paramsValue;
       } else {
         if (typeCheck(paramsValue) === "array") {
-          result[key] = formatArrayValue(paramsValue, formatMethod, excludes);
+          result[formatMethod(key)] = formatArrayValue(
+            paramsValue,
+            formatMethod,
+            excludes
+          );
         } else if (typeCheck(paramsValue) === "object") {
-          result[key] = format(method, excludes)(paramsValue);
+          result[formatMethod(key)] = format(method, excludes)(paramsValue);
         } else {
           result[formatMethod(key)] = copyParams[key];
         }
