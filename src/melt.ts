@@ -65,14 +65,14 @@ const melt = (meltList: Array<MeltOption>) => {
       const { target, rule = null } = meltItem;
       let result = {};
 
-      let _target = formatTarget(target);
+      let params_target = formatTarget(target);
 
       if (rule) {
-        result = rule(eval(_target), copyParams);
+        result = rule(eval(params_target), copyParams);
         checkResult(result);
       }
 
-      eval(`delete ${_target}`);
+      eval(`delete ${params_target}`);
       copyParams = {
         ...copyParams,
         ...result
