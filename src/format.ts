@@ -1,8 +1,8 @@
 import typeCheck from "@konata9/typecheck.js";
-import {formatSnakeToCamel, formatCamelToSnake} from "./utils";
+import { formatSnakeToCamel, formatCamelToSnake } from "./utils";
 
 interface HandleFunction {
-  (params: {[key: string]: any}): {[key: string]: any};
+  (params: { [key: string]: any }): { [key: string]: any };
 }
 
 interface FormatFunction {
@@ -44,7 +44,7 @@ const formatArrayValue = (
   method: string | FormatFunction,
   excludes: string[]
 ): Array<any> => {
-  return array.map((value) => {
+  return array.map(value => {
     if (typeCheck(value) === "array") {
       return formatArrayValue(value, method, excludes);
     } else if (typeCheck(value) === "object") {
@@ -63,11 +63,11 @@ const format = (
 
   const formatMethod = setFormatMethod(method);
 
-  return (params) => {
-    const copyParams = {...params};
-    const result: {[key: string]: any} = {};
+  return params => {
+    const copyParams = { ...params };
+    const result: { [key: string]: any } = {};
 
-    Object.keys(copyParams).forEach((key) => {
+    Object.keys(copyParams).forEach(key => {
       const paramsValue = copyParams[key];
       if (excludes.includes(key)) {
         result[key] = paramsValue;
@@ -89,4 +89,4 @@ const format = (
   };
 };
 
-export {checkFormatMethodParams, setFormatMethod, format};
+export { checkFormatMethodParams, setFormatMethod, format };

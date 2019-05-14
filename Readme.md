@@ -22,27 +22,26 @@ npm i @konata9/milk-shake
 ```
 
 ```javascript
-import shakeParams from "@konata9/milk-shake";
+import { shake, format, map, melt } from "@konata9/milk-shake";
 // or
-import {shake} from "@konata9/milk-shake";
-// or
-const {shakeParams} = require("@konata9/milk-shake");
+const { shake, fromat, map, melt } = require("@konata9/milk-shake");
 ```
 
 #### 2. 使用
 
 ```javascript
-import shakeParams from "@konata9/milk-shake";
+import { shake, format, map, melt } from "@konata9/milk-shake";
 
 const userInfo = {
   user_name: "konata",
   age: 16,
-  friend_list: [{friend_name: "hiragi kagami"}, {friend_name: "hiragi tsukasa"}]
+  friend_list: [
+    { friend_name: "hiragi kagami" },
+    { friend_name: "hiragi tsukasa" }
+  ]
 };
 
-const formattedUserInfo = shakeParams(userInfo, {
-  method: "toCamel"
-});
+const result = shake(userInfo)(format("toCamel"));
 
 /**
  * formattedUserInfo:
@@ -61,44 +60,56 @@ const formattedUserInfo = shakeParams(userInfo, {
 
 > 推荐在 `TypeScript` 环境下使用。
 
-#### shakeParams(params, options)
+#### shake(params)(fromatters)
 
 - `params`: (_required_) `object` 需要处理的对象
-- `options`: (default `{}`) `object` 自定义参数
-  - `method`: (default `null`) `string` | `function` 格式化方法，详细配置见下文 `method`
-  - `exclude`: (default `[]`) `Array` 不需要进行转换的 `key`
-  - `melting`: (default `{}`) `object` 用来移除不需要的 `key` 或者对 `key` 进行降维操作。格式化方法，详细配置见下文 `melting`
-  - `mapping`: (default `[]`) `Array` 对 `key` 进行单独处理的配置，详细配置见下文 `mapping`
+- `formatters`: `function` 用于处理数据的工具函数。`formatters` 的调用方式类似于管道，前一个 `formatter` 的结果会作为下一个 `fromatter` 的参数。因此只要满足返回的是一个对象的前提下，可以编写自定义的处理函数。_**本库提供了 `format`、`melt` 和 `map` 三个方法。** _
 
-_返回_**处理后**的 `params` (不会修改原来的 `params`)
+##### format(method, excludes)
 
-- `method`
+- `method`: (_required_) `string` | `function`
 
-  - `string` 接受 `"toCamel"` 和 `"toSnake"` 两种方法，分别将 `key` 转换为**驼峰**或**下划线**的形式。
-  - `function` 为自定义 `key` 的转换方法
-    - function(key) `key` 传入 `params` 的 `key`，必须提供返回值。返回转换后的 `key`（详细用例见后文）。
-  - 如果不设置 `method` 则，不会对 `key` 做任何转换操作
+  - `method` 接受 "**toCamel**" 和 "**toSnake**" 两种字符串，分别将 `key` 转换为驼峰或下划线的形式。
+  - `method` 也可以为自定义的转换方法 `function`。`function(key)` key 传入 params 的 key，必须提供返回值。返回转换后的 key。
 
-- `melting`
+    ```javascriot
+    // 在所有 `key` 前加上下划线：
+    (key) => `_${key}`
+    ```
 
-  - target: (_reqired_) `Array` 需要降维以及移除的 `key`。
-  - rules: (default `null`) `function` 自定义降维规则。当设置此项时，必须返回一个对象。此操作的对象是最终返回的 `params`。
+- `exclude`: (_not required_) `array` 不需要进行转换的 `key` 的数组。`exclude` 的对象其子元素也将被忽略。
 
-- `mapping`
+##### melt([{target, rule}])
 
-  - from: (_required_) `string` | `Array` 需要进行映射的 `key`。当为数组且没有设置 `rules` 时，只会对数组的第一项做 `from` => `to` 的简单映射。
-  - to: (_required_) `string` 映射后的 `key`
-  - rules: (default `null`) `function` 自定义转换规则。当不设置此项时，仅做 `from` => `to` 的简单映射。
+-
 
-    - function(data, [from])
+##### map([{from, to, rule}])
 
-      1. `data` 为传入的 `params`，可以通过 `rules` 对数据进行编辑和转换（不建议在此做业务处理）。将转换好的结果映射到 `to` 上，建议提供一个返回值，否则对应的 `to` 为 `undefined`。（详细用例见后文）
+##### 自定义 formatter
 
-      2. `from` 即 `mapping` 中定义的 `from`。方便在 `rules` 中调用。
+你可以根据实际需求，自定义 `formatter`。自定义的 `formatter` 需要满足下面的条件。
 
-- 处理顺序程序仅对 `exclude` 之外的 `key` 进行处理；之后进行 `melting` 的检测与处理；再之后进行 `mapping` 的检测，当符合 `mapping` 关系时，根据 `mapping` 的 `rules` 进行处理。
+- `formatter` 需要**返回一个函数**。返回的函数接受需要处理的对象，并且返回处理后的对象。
 
-  因此当同时设置了 `method`，`exclude`，`melting` 和 `mapping` 三个选项时，按照 `exclude` > `melting` > `mapping` > `method` 的顺序进行处理（更多用例可以见后文）。
+```javascript
+// 接收处理需要的参数
+const customFormatter = formaOptions => {
+  // 返回的函数接收需要处理的对象
+  return params => {
+    // ... 处理过程
+    // 处理结束后返回处理过的对象
+    return formattedParams;
+  };
+};
+
+// 在 shake 中使用
+shake(params)(
+  customFormatter(opts),
+  customFormatter(opts),
+  customFormatter(opts),
+  ...
+)
+```
 
 #### more example
 
@@ -108,11 +119,14 @@ _返回_**处理后**的 `params` (不会修改原来的 `params`)
 const userInfo = {
   user_name: "konata",
   age: 16,
-  friend_list: [{friend_name: "hiragi kagami"}, {friend_name: "hiragi tsukasa"}]
+  friend_list: [
+    { friend_name: "hiragi kagami" },
+    { friend_name: "hiragi tsukasa" }
+  ]
 };
 
 const formattedUserInfo = shakeParams(userInfo, {
-  method: (key) => `_${key}_` // 所有的 key 会在前后加 下划线
+  method: key => `_${key}_` // 所有的 key 会在前后加 下划线
 });
 
 /** formattedUserInfo
@@ -132,7 +146,10 @@ const formattedUserInfo = shakeParams(userInfo, {
 const userInfo = {
   user_name: "konata",
   age: 16,
-  friend_list: [{friend_name: "hiragi kagami"}, {friend_name: "hiragi tsukasa"}]
+  friend_list: [
+    { friend_name: "hiragi kagami" },
+    { friend_name: "hiragi tsukasa" }
+  ]
 };
 
 const formattedUserInfo = shakeParams(userInfo, {
@@ -157,7 +174,10 @@ const formattedUserInfo = shakeParams(userInfo, {
 const userInfo = {
   user_name: "konata",
   age: 16,
-  friend_list: [{friend_name: "hiragi kagami"}, {friend_name: "hiragi tsukasa"}]
+  friend_list: [
+    { friend_name: "hiragi kagami" },
+    { friend_name: "hiragi tsukasa" }
+  ]
 };
 
 const formattedUserInfo = shakeParams(userInfo, {
@@ -185,14 +205,17 @@ const userInfo = {
     user_name: "konata",
     age: 16
   },
-  friend_list: [{friend_name: "hiragi kagami"}, {friend_name: "hiragi tsukasa"}]
+  friend_list: [
+    { friend_name: "hiragi kagami" },
+    { friend_name: "hiragi tsukasa" }
+  ]
 };
 
 const formattedUserInfo = shakeParams(userInfo, {
   method: "toCamel",
   melting: {
     target: ["info"],
-    rules: (data) => ({
+    rules: data => ({
       userName: data.info["user_name"],
       age: data.info.age
     })
@@ -216,12 +239,15 @@ const formattedUserInfo = shakeParams(userInfo, {
 const userInfo = {
   user_name: "konata",
   age: 16,
-  friend_list: [{friend_name: "hiragi kagami"}, {friend_name: "hiragi tsukasa"}]
+  friend_list: [
+    { friend_name: "hiragi kagami" },
+    { friend_name: "hiragi tsukasa" }
+  ]
 };
 
 const formattedUserInfo = shakeParams(userInfo, {
   method: "toCamel",
-  mapping: [{from: "age", to: "userAge"}] // 简单的 from => to 的映射
+  mapping: [{ from: "age", to: "userAge" }] // 简单的 from => to 的映射
 });
 
 /** formattedUserInfo
@@ -241,7 +267,10 @@ const formattedUserInfo = shakeParams(userInfo, {
 const userInfo = {
   user_name: "konata",
   age: 16,
-  friend_list: [{friend_name: "hiragi kagami"}, {friend_name: "hiragi tsukasa"}]
+  friend_list: [
+    { friend_name: "hiragi kagami" },
+    { friend_name: "hiragi tsukasa" }
+  ]
 };
 
 const formattedUserInfo = shakeParams(userInfo, {
@@ -289,27 +318,6 @@ const formattedUserInfo = shakeParams(userInfo, {
     {key_1: 'xxx'},
     {key_2: 'xxx'},
   ]
-  ```
-
-- `melting` 和 `exclude` 的区别：`exclude` 是不对 `key` 进行处理，最终输出的结果中会包含 `exclude` 的 `key`。而 `melting` 可以理解为 `delete key` 的操作，`melting` `target` 中的 `key`，理论上不应该出现在最终输出的 `params` 中。
-
-- 使用 `mapping` 时，注意 `to` 的设置，不要出现 `key` 名称的重复，否则会出数据被覆盖的情况。
-
-- 定义 `exclude` 和 `mapping` 中的 `key`，程序不会对其值做嵌套处理。如果需要在 `mapping` 后仍然需要进行嵌套处理，建议在 `mapping` 的 `rules` 中做处理。
-
-  ```javascript
-  // 如果在 exclude 或 mapping 中定义了 key2 的话，
-  // 那么对 key2 的嵌套内容不会做处理(key2_1，key2_2)。
-  // 需要自己定义 rules 来处理。
-  obj:{
-    key1:{key1_1: 'xxx'},
-    key2:{
-      key2_1:'xxx',
-      key2_2:{
-        key2_2_1:'xxx'
-      }
-    }
-  }
   ```
 
 #### 测试
