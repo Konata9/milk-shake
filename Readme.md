@@ -2,15 +2,14 @@
 
 ![MIT license](https://img.shields.io/badge/license-MIT-brightgreen.svg) ![GitHub package.json version](https://img.shields.io/github/package-json/v/Konata9/milk-shake.svg) ![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/Konata9/milk-shake.svg) ![Codecov](https://img.shields.io/codecov/c/gh/Konata9/milk-shake.svg)
 
-> 使用 `TypeScript` 编写的用于格式化对象 **key** 的工具。
+> 使用 `TypeScript` 编写的用于格式化对象 **key** 的工具。2.x 版本不兼容 1.x 版本（1.x 版本已经弃用）[1.x 版本地址](https://github.com/Konata9/milk-shake/tree/v1.2.2)。
 
 ### 特点
 
-- 让对象的 `key` 在 **驼峰** 与 **下划线** 形式间自由转换
-- 可以自定义 `key` 的转换方法
-- 可以对传入的对象进行简单的数据变化
+- 让对象的 `key` 在 **驼峰** 与 **下划线** 或 **自定义** 形式间自由转换
 - 简单的 API 使用
 - 不会修改传入的数据
+- 类似 `pipe` 的调用方式
 
 ### 快速上手
 
@@ -25,7 +24,7 @@ npm i @konata9/milk-shake
 ```javascript
 import shakeParams from "@konata9/milk-shake";
 // or
-import {shakeParams} from "@konata9/milk-shake";
+import {shake} from "@konata9/milk-shake";
 // or
 const {shakeParams} = require("@konata9/milk-shake");
 ```

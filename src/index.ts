@@ -22,5 +22,12 @@ const shake = (params: {[key: string]: any}) => {
   };
 };
 
+const milkShake: any = {
+  shake,
+  format,
+  melt,
+  map
+};
+
 export {checkParams, shake, format, melt, map};
-export default shake;
+export default milkShake;
