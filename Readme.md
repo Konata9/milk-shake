@@ -63,7 +63,7 @@ const result = shake(userInfo)(format("toCamel"));
 #### shake(params)(fromatters)
 
 - `params`: (_required_) `object` 需要处理的对象
-- `formatters`: `function` 用于处理数据的工具函数。`formatters` 的调用方式类似于管道，前一个 `formatter` 的结果会作为下一个 `fromatter` 的参数。因此只要满足返回的是一个对象的前提下，可以编写自定义的处理函数。_**本库提供了 `format`、`melt` 和 `map` 三个方法。** _
+- `formatters`: `function` 用于处理数据的工具函数。`formatters` 的调用方式类似于管道，前一个 `formatter` 的结果会作为下一个 `fromatter` 的参数。因此只要满足返回的是一个对象的前提下，可以编写自定义的处理函数。**本库提供了 `format`、`melt` 和 `map` 三个方法。**
 
 ##### format(method, excludes)
 
@@ -319,6 +319,8 @@ const formattedUserInfo = shakeParams(userInfo, {
     {key_2: 'xxx'},
   ]
   ```
+
+- `melt` 和 `map` 的相关使用场景
 
 #### 测试
 
